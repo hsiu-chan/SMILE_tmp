@@ -6,11 +6,10 @@ desktop.ini
 *.h5
 seg.h5
 *.DS_Store
-YOLOv8/runs/detect/train4/weights/best.pt
-YOLOv8/runs/detect/train4/weights/last.pt
-*.pt 
+
+YOLOv8/runs/*.pt
 *dataset
-YOLOv8\YOLOdataset
+YOLOv8/YOLOdataset
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
