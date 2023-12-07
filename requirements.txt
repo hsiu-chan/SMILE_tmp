@@ -1,0 +1,10 @@
+Flask==2.2.2
+Pillow==9.4.0
+opencv-python-headless==4.7.0.72
+scikit-image==0.20.0
+numpy
+uuid
+git+https://github.com/facebookresearch/segment-anything.git
+torch -f https://download.pytorch.org/whl/torch_stable.html
+torchvision -f https://download.pytorch.org/whl/torch_stable.html
+torchaudio -f https://download.pytorch.org/whl/torch_stable.html
