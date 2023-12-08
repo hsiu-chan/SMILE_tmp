@@ -48,6 +48,7 @@ docker rm $(docker ps -a -q)
 
 ### YOLOv8 
 - 模型訓練放在 ```YOLOv8/```，詳見 ```YOLOv8/TrainYOLO.ipynb```
+- YOLOv8 測試見 ```YOLOv8demo.ipynb```
 
 - flask 網頁 Demo 路徑 /pages/smiledetect
 
