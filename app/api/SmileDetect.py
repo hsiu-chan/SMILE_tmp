@@ -79,6 +79,7 @@ class SMILE:
         plt.savefig(self.output_path,bbox_inches='tight',pad_inches=0.0)
         self.base64=path_to_base64(self.output_path)
         plt.show()
+        plt.clf()
         return
 
 

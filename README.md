@@ -46,6 +46,14 @@ docker rm $(docker ps -a -q)
     - [ ] SOLO
     - [ ] 直接對mask用分類器
 
+### YOLOv8 
+- 模型訓練放在 ```YOLOv8/```，詳見 ```YOLOv8/TrainYOLO.ipynb```
+
+- flask 網頁 Demo 路徑 /pages/smiledetect
+
+![Alt text](paste_src/README.png)
+
+
 ### DEMO
 
 1. SMA Demo:[/pages/SMAdemo](/pages/SMAdemo)
