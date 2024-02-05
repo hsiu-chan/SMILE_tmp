@@ -67,8 +67,20 @@ def build(path,arr):
         label_path=f"{path}labels/{name}.txt"
         with open(label_path,"w") as f:
             for i in range(len(masks['label'])):
-                if masks['label'][i]==-1:
+                if int(masks['label'][i])==-1:
                     continue
+                elif int(masks['label'][i]) in (13, 23):
+                    cls=1
+                elif int(masks['label'][i])/10 <3:
+                    cls=0
+                elif int(masks['label'][i])/10 >=3:
+                    cls=2
+                print(masks['label'][i], cls )
+
+
+                    
+
+
                 mask=Polygon(masks["mask"][i])
                 
                 width=mask.width
@@ -76,7 +88,7 @@ def build(path,arr):
                 cx=mask.bbox[0]+width/2
                 cy=mask.bbox[1]+height/2
 
-                f.write(f'0 {cx/w} {cy/h} {width/w} {height/h}\n')
+                f.write(f'{cls} {cx/w} {cy/h} {width/w} {height/h}\n')
 
                 #####test
                 #plt.text(cx, cy, masks['label'][i])
