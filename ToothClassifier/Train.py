@@ -3,10 +3,22 @@ from Models.Polygon import Polygon
 import cv2
 
 label=['11','21','12','22','13','23','14','24','15','25','16','26','17','27']
-label_now=[1,1,2,2,3,3,4,4,5,5,5,5,5,5]
+#label_now=[1,1,2,2,3,3,4,4,5,5,5,5,5,5]
+label_now=[1,1,2,3,4,5,6,6,6,6,6,6,6,6]
+
 label_map={ l:n for l,n in zip(label,label_now)}
 
 ALL_LABELS=set(label_now)
+NUM_LABELS=len(ALL_LABELS)+1
+FDI_MAP={
+    0:'L',
+    1:'1',
+    2:'12',
+    3:'22',
+    4:'13',
+    5:'23',
+    6:'pm/m'
+}
 
 
 def get_feature(img_path, masks):
@@ -22,6 +34,7 @@ def get_feature(img_path, masks):
             m.center[1]/h,
             m.bbox[2]/w,
             m.bbox[3]/h,
+            w/h,
         ]
 
         result.append(f)
@@ -50,6 +63,7 @@ def BuildDataSet():
                 m.center[1]/h,
                 m.bbox[2]/w,
                 m.bbox[3]/h,
+                w/h,
             ]
 
             x.append(f)
