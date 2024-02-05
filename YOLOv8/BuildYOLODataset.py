@@ -1,4 +1,4 @@
-from Polygon import Polygon
+from Models.Polygon import Polygon
 import json
 import numpy as np
 import cv2
@@ -8,14 +8,15 @@ import io
 import random as rd
 import matplotlib.pyplot as plt
 import shutil
-
+from config import LABELED_DIR
 
 if sys.version_info[0] >= 3:
     unicode = str
 # __author__ = 'hcaesar'
 
 #原標註路徑
-Dir_path='../app/TrainData/labeled/' 
+#Dir_path='../app/TrainData/labeled/' 
+Dir_path=LABELED_DIR
 
 # 原圖的路径
 image_dir = Dir_path+'image/'
@@ -113,6 +114,6 @@ def BuildYOLODataset(k):
     
     
     
-    print(f'build({Out_path},{rgb_image_files[:idx]})')
+    print(f'build({Out_path},{rgb_image_files[:idx]})',end='\r')
     build(Out_path+"train/",rgb_image_files[:idx])
     build(Out_path+"val/",rgb_image_files[idx:])
