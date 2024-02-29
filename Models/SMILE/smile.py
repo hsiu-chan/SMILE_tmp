@@ -6,6 +6,9 @@ import mediapipe as mp
 import os
 import numpy as np
 from config import YOLO_BEST_PT,OUTPUT_DIR
+from ToothClassifier import ToothClassifier
+
+
 
 Model = YOLO(YOLO_BEST_PT)
 mp_face_detection = mp.solutions.face_detection
@@ -18,12 +21,13 @@ face_mesh=mp_face_mesh.FaceMesh(
 
 
 class SMILE:
-    def __init__(self,input_path, device='cpu'):
+    def __init__(self,input_path, device='cpu',filter=0.9):
         self.device=device
         #####Input/output#####
         self.input_path=input_path 
 
-        self.output_path=f"{OUTPUT_DIR}output.jpeg" #圖片輸出路徑
+        self.output_path=f"{OUTPUT_DIR}output.jpeg" 
+        """圖片輸出路徑"""
 
 
 
@@ -32,17 +36,31 @@ class SMILE:
         h, w ,d= img.shape
         self.img=cv2.resize(img, (1024, int(1024*h/w)), interpolation=cv2.INTER_AREA)
         self.shape=self.img.shape
+        """原圖shape"""
 
         #####Find mouse#####
         self.mouse=[]
-        self.box=[]#嘴巴Box
-        self.boximg=[]#只保留嘴巴
-        self.box_pol=[]#boximg座標
-        self.tooth=[]
-
+        self.box=[]
+        """嘴巴Box"""
+        self.boximg=[]
+        """裁切只保留嘴巴img"""
+        self.box_pol=[]
+        """boximg切割的座標"""
+        
 
 
         #####Result#####
+        self.filter=filter
+        self.tooth=[]
+        """
+        [center_x,center_y,w,h]
+        """
+        self.tooth_cls=[]
+        """牙齒類別"""
+
+        self.ntooth=0
+        """牙齒數"""
+
 
         #### set_model###
 
@@ -62,26 +80,41 @@ class SMILE:
             device=self.device
         )
         
-        img=plt.imread(self.output_path)
-        plt.imshow(img)
+        
 
 
 
         boxes = result[0].boxes
-        self.tooth = [box.xywh.tolist()[0] for box in boxes]
+        
+        self.tooth=[]
+        for box in boxes:
+            if box.conf[0]>=self.filter:
+                self.tooth.append(box.xywh.tolist()[0] )
+
+
+
+        h,w,d=self.boximg.shape
+
+        self.tooth_cls=ToothClassifier(w,h,self.tooth).cls
+
+        self.ntooth=len(self.tooth_cls)
+
 
         
+        # OUTPUT
+        currentAxis = plt.gca()
+        img=plt.imread(self.output_path)
+        plt.imshow(img)
 
-        for box in boxes:
-            if box.conf[0]<0.9:
-                continue
-            #print('BOX')
-            tuple(box.xywh.tolist()[0])
-            #print(tuple(box.xywh.tolist()[0]))
-            x,y,w,h=tuple(box.xywh.tolist()[0])
+        colors=plt.cm.hsv(np.linspace(0, 1, self.ntooth)).tolist()   
+
+
+        for t, cl,c in zip(self.tooth, self.tooth_cls,colors):
+            x,y,w,h=tuple(t)
             
             plt.scatter(x,y)
-            plt.gca().add_patch(plt.Rectangle((x-w/2,y-h/2),w,h,fill=False,edgecolor='r',linewidth=2))
+            currentAxis.text(x,y, cl,bbox={'facecolor': c, 'alpha': 0.5})
+            currentAxis.add_patch(plt.Rectangle((x-w/2,y-h/2),w,h,fill=False,edgecolor=c,linewidth=2))
 
 
         plt.axis('off')        

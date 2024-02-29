@@ -1,74 +1,43 @@
-import Controlers.GetLabeledData as get 
-from Models.Polygon import Polygon 
-import cv2
-
-label=['11','21','12','22','13','23','14','24','15','25','16','26','17','27']
-#label_now=[1,1,2,2,3,3,4,4,5,5,5,5,5,5]
-label_now=[1,1,2,3,4,5,6,6,6,6,6,6,6,6]
-
-label_map={ l:n for l,n in zip(label,label_now)}
-
-ALL_LABELS=set(label_now)
-NUM_LABELS=len(ALL_LABELS)+1
-FDI_MAP={
-    0:'L',
-    1:'1',
-    2:'12',
-    3:'22',
-    4:'13',
-    5:'23',
-    6:'pm/m'
-}
 
 
-def get_feature(img_path, masks):
+
+
+
+"""def get_feature_masks(img_path, masks):
 
     img=cv2.imread(img_path)
     h,w,d = img.shape
     result=[]
 
-    for m in masks:
-        m=Polygon(m)
-        f=[
-            m.center[0]/w,
-            m.center[1]/h,
-            m.bbox[2]/w,
-            m.bbox[3]/h,
-            w/h,
-        ]
 
-        result.append(f)
+    l=len(masks)
 
-    return result
+    masks=[Polygon(m) for m in masks]
 
+    mw=[m.bbox[2] for m in masks]
+    sorted_mw=sorted(mw) # 大到小
+    ranks_mw = {val: i/(l-1) for i, val in enumerate(sorted_mw)}# i:排名, val:原始值
+
+    mh=[m.bbox[3] for m in masks]
+    sorted_mh = sorted(mh)
+    ranks_mh = {val:i/(l-1) for i,val in enumerate(sorted_mh)}
 
 
 
-def BuildDataSet():
-    input = get.get_all_data()
-    x = []
-    y = []
-    
 
-    for data in input:
-        img=cv2.imread(data["path"])
-        h,w,d = img.shape
+    features=[[
+        m.center[0]/w,
+        m.center[1]/h,
+        m.bbox[2]/w,
+        m.bbox[3]/h,
+        w/h,
+        ranks_mw[mw[i]],# Rank w
+        ranks_mh[mh[i]] # Rank t
 
-        for l,m in zip(data['label'],data['mask']):
-            if str(l)=='-1':
-                continue
-            m=Polygon(m)
-            f=[
-                m.center[0]/w,
-                m.center[1]/h,
-                m.bbox[2]/w,
-                m.bbox[3]/h,
-                w/h,
-            ]
+    ] for i,m in enumerate(masks)]
 
-            x.append(f)
-            try:
-                y.append(label_map[l])
-            except:
-                y.append(0)
-    return x,y
+
+
+
+    return features
+"""
